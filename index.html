@@ -7,35 +7,51 @@
     <style>
         :root {
             --bg-dark: #0a192f;
-            --bg-card: #112240;
+            --bg-card: rgba(17, 34, 64, 0.65);
             --text-light: #e6f1ff;
+            --text-muted: #94a3b8;
             --accent-blue: #00a8ff;
-            --border-color: #233554;
+            --border-color: rgba(255, 255, 255, 0.12);
         }
+
+        *, *:before, *:after { box-sizing: border-box; }
 
         body {
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-dark);
             color: var(--text-light);
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            position: relative;
         }
 
-        /* Top Info Bar for User IP & ASN */
+        /* FULLPAGE BACKGROUND WITH 25% OPACITY */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: url('images/background_image.jpg') center/cover no-repeat;
+            opacity: 0.25;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* IP & ASN HEADER BAR */
         .user-info-bar {
             width: 100%;
-            background-color: rgba(17, 34, 64, 0.8);
+            background-color: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border-color);
             padding: 12px 24px;
-            box-sizing: border-box;
             display: flex;
             justify-content: center;
             gap: 20px;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         .info-badge {
@@ -50,69 +66,147 @@
             color: var(--accent-blue);
         }
 
-        /* Header Section */
+        /* HEADER SECTION */
         header {
             text-align: center;
-            margin-top: 40px;
-            margin-bottom: 30px;
+            margin-top: 30px;
+            margin-bottom: 20px;
             padding: 0 20px;
         }
 
         .logo {
-            max-width: 600px;
+            max-width: 550px;
             width: 90%;
             height: auto;
-            margin-bottom: 20px;
-            filter: drop-shadow(0 0 15px rgba(0, 168, 255, 0.2));
+            margin-bottom: 15px;
+            filter: drop-shadow(0 0 15px rgba(0, 168, 255, 0.3));
         }
 
         h1 {
-            font-size: 2.2rem;
+            font-size: 2rem;
             letter-spacing: 2px;
             text-transform: uppercase;
             margin: 0;
             color: #ffffff;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
-        /* Main Content Box (Looking Glass Form Area) */
+        /* GLASSMORPHISM CARD FOR BGP LOOKING GLASS */
         main {
             width: 90%;
-            max-width: 800px;
-            background-color: var(--bg-card);
+            max-width: 900px;
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border: 1px solid var(--border-color);
-            border-radius: 8px;
+            border-top: 4px solid var(--accent-blue);
+            border-radius: 12px;
             padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            margin-bottom: 50px;
+            box-shadow: 0 20px 30px rgba(0, 0, 0, 0.5);
+            margin-bottom: 40px;
+        }
+
+        /* BGP.TOOLS INJECTED LAYOUT OVERRIDES */
+        #bgp-page {
+            display: grid;
+            gap: 0.75rem 1rem;
+            grid-template-columns: minmax(12rem, 1fr) minmax(16rem, 1.8fr) auto;
+            align-items: end;
+        }
+
+        #bgp-page > hr, #bgp-page > noscript, #scrollwrapper {
+            grid-column: 1 / -1;
+        }
+
+        #bgp-page p, #bgp-page label {
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin: 0;
+        }
+
+        #SessionDropDownText { grid-column: 1; grid-row: 1; }
+        #bgpsessionSelect   { grid-column: 1; grid-row: 2; }
+        #bgp-page > p:not(#SessionDropDownText, #divider) { grid-column: 2; grid-row: 1; }
+        #prefix             { grid-column: 2; grid-row: 2; }
+        #divider { display: none; }
+        #bgp-submit-button { grid-column: 3; grid-row: 2; }
+
+        #bgp-page select, #bgp-page input[type="text"] {
+            background: rgba(10, 25, 47, 0.8);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-light);
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            width: 100%;
+            outline: none;
+        }
+
+        #bgp-submit-button {
+            background-color: var(--accent-blue);
+            border: none;
+            border-radius: 6px;
+            color: #000000;
+            font-weight: 800;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            min-height: 2.75rem;
+        }
+
+        #scrollwrapper {
+            background: rgba(5, 12, 24, 0.85);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 1.25rem;
+            min-height: 10rem;
+            margin-top: 1rem;
+        }
+
+        #bgpResults {
+            color: #E2E8F0;
+            font-family: monospace !important;
+            font-size: 0.9rem !important;
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
         }
     </style>
 </head>
 <body>
 
-    <!-- IP & ASN Header -->
     <div class="user-info-bar">
         <div class="info-badge">Your IP: <span id="user-ip">Loading...</span></div>
         <div class="info-badge">ASN / Org: <span id="user-asn">Loading...</span></div>
     </div>
 
-    <!-- Center Logo & Title Header -->
     <header>
-        <img src="logo.png" alt="Russellville EPB SmartNet Logo" class="logo">
+        <!-- EMBED YOUR BASE64 STRING HERE -->
+        <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAD0AAAARACAMAAAD6AFE5AAADAFBMVEUNHzcOHzgNHjUOHjb///8RK0kTK0oPIDk1MTIOIjsOIDYNIToTLUsTLkwPIz8LIDkWNFUPKEQUME4OIz4QJj4TL03+/v0RJkMNIj02MjIRJ0cQJkYOIzwMHjUQKEgWMU8QJUEQKkgPKUcSKkYTLEsPJ0I1MC8WL1EPIDcSLUn8/P0PJkUULUwSKUgVL1AWME4NJUQVMlIXM1MPI0EQJUAXMFIVMlURKEUXMlAzLzETMVEULU8TMFMOJT0VLkwNJUAVLk0SKkr9//8QJD0AAAASL1AzMTESLU4XNVoVME0OKEYUNFIMHTQVMlMRKkwQIjoYNVcPIDsOJ0EOJkIXM1gVNFgVMlf7+/sTLEcKHjcXOV8tn9UWL00SKEAYMlUXN1wMKEoMIDsUNlw3NDQ3aqEVLEsZO2I1MzMbP2YMIjoEBAQSLEcRIjsNKk0PMVgqnNMNLFH2/f8zZ6H6//83bKUcQmsgS3YxLi0eSHIaRG////4UPGYRNFsNL1UWLlAlVIEMI0IkkswjT3sVQGwQOGEoh8IaN1o0Zpwte7Qjl9AljccOJkcsjsgoWocrgLswcaowbKUfqOAgo9wrls8hn9g5caghm9Quda/v/P8bTn4XSHYireMmX47e3uEqsOM/tOVfXmE0suXAzt7K1eMyjML4+Pm8vsQbNVQ+aJfW1tvS2+cNJ0Jsa2/V7fwpJye1t72CgoeVlpxMuOUPIDQzgLYwhb14d3ydutYeV4e3xdetvdIvZJPf7fmhoaXk5upSUFEylMfZ4u6MjZI1nc3p9f2pxdzh+f83ea2KqcutrrNtosqyzOE+lsF7rdBWZHUcL0aYr82exN7Fxspbu+aNtNTPz9M9ibZ7oseOv9yAt9jv7/FHZovG8v8NHzNssdUnaZnH5PmmtsnU+f9sweaOnq9+yOeS0Op5hZVgps+z6f41YYwwptigqbVodYdBQUFMlLp/kqZfnL8LHDNUcpNMpM1KWWpCf6mh2fErPFEzQ1hpgZwkNku62vE9TWBekLIVFRWTe5+lAAf//0lEQVR42myPP6usMBDFTSyCCspyA7lwXUizkH7TBou0gmj3iv0Agt+/fr+JedzmHTMzZ/7kTGx024O2xXSvMYkh9L2u1doHNQttqwsPgfyerj2taZdugaZGE1/1sZa+TGjdruuKVzLT4iBUIGu7yqu0zEsEpsGJziqysulWNHIXfmdCENCiq6kHveo1oCal0ob0AQqp+vQERDkkoZjqQ89BN2gYRzgghsr4cWPKP2JFBEAEPFRkmNwUNaJW3JIOe2nygXDvLMvLPqoygoOxC/w+TfJb9dkwsAZKz36apj/P/pwkYucwGGVAH5TZjHClOA18Mw1GhxpE7XlrIIGa4ZlKQOcOoBE3DefZzV237+Yy27Zdl9mN2XfJ0YCRKWRkAT6jd5Ewh3QIzLCpGwzpboZu24YJVbHh+7tL3TDMcy6nuJQmCDRf7MJfu5m7OM48wlK3drbSZRTA85mstSnblDgVth5u5cTQ3Zul85lTzhad+JVzAuMYR9Ebv97v8T0C713MMWehNo9+jNZ6V5VBxtLHWg7hFxH1z79CidEn632MpP+Bd6+XB85FzLubY8w7ACPnbpU9DtaXuBweRB+5KYMHOq/D8YDRLcvr9Xh4txw/P7Tex/Io+EvlGDJJDMJQWBFVg+pMV+2mFcwVjdgZppF3smciuhLF//f3UXcfSfpeCoF5/nw2PeMG7B0XogcRNlDVWFgEUGnfCVqww/xuiDOWsp2vn8LUweNRdJ7ZwjaNc9GCQVIH+h/X8ZqoWhSiepGskLTriGK3X831cI03i/m22iAt1yE319f3Lqf398eIewOAnC4S3iIUn2+p/uS17/jO9/3229/+Ize1452+P3v/643f/rTH37i17/+5m++774j2Xm46Lg+fXpvepX3R+/S3E3u2o3k3/m0mZIn/RkP+UAn8KzH592D//s2I5R3E6p/9l7/A9jS07m7pY9XN7S9sP/t5CjX4OAtQ0fIq544unmH/yq0N1U7cE53k/z9e45P9e8B/O3BqWkeL8eI495O1k7eY2X4c6I/R15w9N5pSj+m1fU0fP/o2+s6/Yg19XN/9/n1qY2+e9M+N3k1N5k47Y91R90R0iEAnVsJmn3A5AIn44I7s1C/u/3M6J47X6+y1e+8p232A4AzeS/M6b13sL7/v23N1kG56L423/E2u5u3341bXm4O4fXbU8dInSrm1pEnefl+1nN+T4p2o6vXG3o3vXm931v/A/wI+M0w+91b+p0O1XQ4r228p2m3v5bV2u36wS9X9v31fXn0kG23pXv14X96U969eN9m0d43D5e2Nzc3+S/x/bU/9X/H1z4x/gB0lJv3I1JutpI3N1v9X0/O0oI9eD63Xm/T2t6sXUf8s9K30/H3i9s1oW4u7sJ/97oH2Ld33+6A36qZ+/Uo/a3PjC4t1c/e2m3f0O3W193eGtzCbgvR4X5v+v0s3jQxOnC1N7j2f5t92trD30PefcI/U8z36Pnh7f+vT59m/m3iT89Tj183bL2L1d16/aXm+X4qNne0fRsvN2+m7u4d1+L5vXm9t999N4p/X3i6aHnFv+2u/Wp24P/0A9xP1w/xLze228c2E2v04a/m/sPevbM7L92Y//2uJ58f4y/H43E081L3m/731vbfp/c3D//p5u2v2v4s5e+45y/b60XU59++p7/G4uP3P17e1329o//H4A/iO8/A" 
+     alt="Russellville EPB SmartNet Logo" 
+     class="logo">
         <h1>BGP Looking Glass</h1>
     </header>
 
-    <!-- Main Looking Glass Interface -->
     <main>
-        <!-- Place your Looking Glass form controls (Query type, Target IP/Host, Router select) here -->
+        ::BGPTOOLS_LOOKINGGLASS_BOX::
     </main>
 
+    <footer>
+        © 2026 EPB SmartNet | Russellville KY 42276 | AS14749
+    </footer>
+
     <script>
-        // Fetch IP and ASN via RDAP/ARIN-compliant API endpoint
         async function fetchNetworkDetails() {
             try {
                 const response = await fetch('https://ipapi.co/json/');
                 const data = await response.json();
-                
                 document.getElementById('user-ip').textContent = data.ip || 'N/A';
                 document.getElementById('user-asn').textContent = `${data.asn || ''} (${data.org || 'Unknown'})`;
             } catch (error) {
@@ -120,8 +214,8 @@
                 document.getElementById('user-asn').textContent = 'Unable to fetch';
             }
         }
-
         fetchNetworkDetails();
     </script>
+
 </body>
 </html>
