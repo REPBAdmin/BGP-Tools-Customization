@@ -74,13 +74,58 @@
             padding: 0 20px;
         }
 
-        .logo {
-            max-width: 550px;
-            width: 90%;
-            height: auto;
+        /* LOGO CONTAINER: Clips the shimmer to 30px rounded corners */
+        .hero-brand {
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+            border-radius: 30px;
+            max-width: 750px;
+            width: 100%;
             margin-bottom: 15px;
-            border: 2px solid #FFFFFF;
-            filter: drop-shadow(0 0 15px rgba(0, 168, 255, 0.3));
+			filter: drop-shadow(0 0 10px rgba(0, 168, 255, .8));
+        }
+
+        .logo {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 30px;
+            /* GLOW INTENSITY INCREAASD TO 0.8 OPACITY */
+            
+        }
+
+        /* GLASS SHIMMER ANIMATION */
+        .hero-brand::after {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -150%;
+            width: 100%;
+            height: 200%;
+            background: linear-gradient(
+                75deg, 
+                rgba(255, 255, 255, 0) 20%, 
+                rgba(255, 255, 255, 0.4) 50%, 
+                rgba(255, 255, 255, 0) 80%
+            );
+            transform: rotate(25deg);
+            pointer-events: none;
+            animation: glassShimmer 2.5s ease-in-out 0.5s 1 normal forwards;
+        }
+
+        @keyframes glassShimmer {
+            0% {
+                left: -150%;
+            }
+            100% {
+                left: 150%;
+            }
+        }
+
+        /* Re-trigger shimmer on hover */
+        .hero-brand:hover::after {
+            animation: glassShimmer 1.5s ease-in-out forwards;
         }
 
         h1 {
@@ -188,7 +233,9 @@
     </div>
 
     <header>
-        <img src="https://repbadmin.github.io/BGP-Tools-Customization/images/logo.png" class="logo" alt="EPB SmartNet Logo">
+        <a href="https://www.epbnet.com" class="hero-brand" target="_blank" rel="noopener noreferrer">
+            <img src="https://repbadmin.github.io/BGP-Tools-Customization/images/logo.png" class="logo" alt="EPB SmartNet Logo">
+        </a>
         <h1>BGP Looking Glass</h1>
     </header>
 
