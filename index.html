@@ -4,27 +4,216 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EPB Network - BGP Looking Glass</title>
-    <link rel="stylesheet" href="/BGP-Tools-Customization/style.css">
+    <style>
+        :root {
+            --epb-primary-dark: #1C4E6E;   /* Dark Blue */
+            --epb-secondary-blue: #608299; /* Medium Blue */
+            --epb-light-gray: #D4D6D7;     /* Light Gray */
+            --bg-neutral: #0F172A;          /* Modern Dark Background */
+            --surface: #1E293B;             /* Card Surface */
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --border: #334155;
+            --accent: #38BDF8;            /* Accent Light Blue */
+        }
+
+        *, *:before, *:after { box-sizing: border-box; }
+
+        body {
+            background-color: var(--bg-neutral);
+            color: var(--text-main);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER */
+        .site-header {
+            background: rgba(15, 23, 42, 0.95);
+            border-bottom: 3px solid var(--epb-primary-dark);
+            padding: 1rem 2rem;
+        }
+
+        .header-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin: 0;
+        }
+
+        /* PAGE SHELL */
+        .page-shell {
+            flex: 1 0 auto;
+            width: min(1100px, calc(100% - 2rem));
+            margin: 3rem auto;
+            text-align: center;
+        }
+
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            margin: 0.5rem 0;
+            color: var(--text-main);
+        }
+
+        .intro {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            margin: 0 auto 2rem;
+            max-width: 600px;
+        }
+
+        /* CARD CONTAINER FOR LOOKING GLASS */
+        .looking-glass-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-top: 5px solid var(--epb-primary-dark);
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+            text-align: left;
+        }
+
+        /* BGP.TOOLS INJECTED FORM OVERRIDES */
+        #bgp-page {
+            display: grid;
+            gap: 0.75rem 1rem;
+            grid-template-columns: minmax(12rem, 1fr) minmax(16rem, 1.8fr) auto;
+            align-items: end;
+        }
+
+        #bgp-page > hr, 
+        #bgp-page > noscript, 
+        #scrollwrapper {
+            grid-column: 1 / -1;
+        }
+
+        #bgp-page p, 
+        #bgp-page label {
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin: 0;
+        }
+
+        #SessionDropDownText { grid-column: 1; grid-row: 1; }
+        #bgpsessionSelect   { grid-column: 1; grid-row: 2; }
+        
+        #bgp-page > p:not(#SessionDropDownText, #divider) { grid-column: 2; grid-row: 1; }
+        #prefix             { grid-column: 2; grid-row: 2; }
+        
+        #divider { display: none; }
+        #bgp-submit-button { grid-column: 3; grid-row: 2; }
+
+        /* FORM INPUT STYLES */
+        #bgp-page select, 
+        #bgp-page input[type="text"] {
+            background: #0F172A;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text-main);
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            width: 100%;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        #bgp-page select:focus, 
+        #bgp-page input[type="text"]:focus {
+            border-color: var(--accent);
+        }
+
+        /* QUERY BUTTON STYLE */
+        #bgp-submit-button {
+            background-color: var(--epb-primary-dark);
+            border: none;
+            border-radius: 0.5rem;
+            color: #FFFFFF;
+            font-weight: 700;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            min-height: 2.75rem;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+
+        #bgp-submit-button:hover {
+            background-color: var(--epb-secondary-blue);
+        }
+
+        /* RESULTS TERMINAL BOX */
+        #scrollwrapper {
+            background: #090D16;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 1.25rem;
+            min-height: 10rem;
+            margin-top: 1rem;
+        }
+
+        #bgpResults {
+            color: #E2E8F0;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+            font-size: 0.9rem !important;
+            line-height: 1.5;
+        }
+
+        /* FOOTER */
+        .site-footer {
+            border-top: 1px solid var(--border);
+            padding: 1.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            #bgp-page {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            #bgp-submit-button { margin-top: 0.5rem; }
+        }
+    </style>
 </head>
 <body>
 
-    <header class="sticky-app-header">
-        <div class="header-main">
-            <div class="company-logo">
-                <img src="/BGP-Tools-Customization/images/logo.png" alt="EPB Logo" class="company-logo-img">
-            </div>
-            <h2 class="centered-title">Network Looking Glass</h2>
+    <header class="site-header">
+        <div class="header-inner">
+            <h1 class="header-title">EPB Network Infrastructure</h1>
         </div>
     </header>
 
-    <div class="wrapper">
-        <div class="card">
-            <h3>BGP Route Query</h3>
-            
+    <main class="page-shell">
+        <h1 class="hero-title">BGP Looking Glass</h1>
+        <p class="intro">
+            Inspect real-time BGP routing statistics and prefix availability across the EPB network backbone.
+        </p>
+
+        <section class="looking-glass-card">
+            <!-- BGP.TOOLS RUNTIME PLACEHOLDER -->
             ::BGPTOOLS_LOOKINGGLASS_BOX::
-            
-        </div>
-    </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <p>© 2026 EPB Network Operations Center</p>
+    </footer>
 
 </body>
 </html>
